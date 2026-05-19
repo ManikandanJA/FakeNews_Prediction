@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fake News Detector | Home</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-brand">
+    <span class="logo-icon">🔍</span>
+    <span class="logo-text">FakeNewsDetector</span>
+  </div>
+  <div class="nav-links">
+    <a href="{{ url_for('index') }}" class="active">Home</a>
+    <a href="{{ url_for('about') }}">About</a>
+    {% if logged_in %}
+      <a href="{{ url_for('predict') }}">Detector</a>
+      <a href="{{ url_for('history') }}">History</a>
+      <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('signup') }}" class="btn-nav-signup">Sign Up</a>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🤖 AI + ML Powered</div>
+    <h1 class="hero-title">Detect <span class="highlight">Fake News</span><br>Instantly</h1>
+    <p class="hero-desc">
+      Our Machine Learning model analyses news text and tells you whether it's
+      <strong>Real</strong> or <strong>Fake</strong> — with confidence score and verified sources.
+    </p>
+    <div class="hero-btns">
+      {% if logged_in %}
+        <a href="{{ url_for('predict') }}" class="btn btn-primary">🔍 Go to Detector</a>
+        <a href="{{ url_for('history') }}" class="btn btn-outline">📋 My History</a>
+      {% else %}
+        <a href="{{ url_for('signup') }}" class="btn btn-primary">Get Started Free</a>
+        <a href="{{ url_for('login') }}" class="btn btn-outline">Login</a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="visual-card card-real">
+      <span>✅</span>
+      <p>"PM of India is Narendra Modi"</p>
+      <div class="tag real-tag">REAL — Verified ✔</div>
+    </div>
+    <div class="visual-card card-fake">
+      <span>❌</span>
+      <p>"Aliens land in Chennai and take over Metro"</p>
+      <div class="tag fake-tag">FAKE — 91%</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <h2 class="section-title">How It Works</h2>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <div class="step-icon">📝</div>
+      <h3>Enter News Text</h3>
+      <p>Paste or type any news headline or paragraph you want to verify.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <div class="step-icon">🧠</div>
+      <h3>ML Analysis</h3>
+      <p>TF-IDF vectorization + Passive Aggressive Classifier analyses the text in milliseconds.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <div class="step-icon">📊</div>
+      <h3>Get Result</h3>
+      <p>Receive Real / Fake verdict with confidence percentage and trusted source links.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <h2 class="section-title">Why Use Our Detector?</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feat-icon">⚡</div>
+      <h3>Instant Results</h3>
+      <p>Get predictions in real-time without any delay.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon">🔒</div>
+      <h3>Verified Database</h3>
+      <p>Cross-checked against a curated trusted facts database.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon">📈</div>
+      <h3>Confidence Score</h3>
+      <p>See how confident the model is with each prediction.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon">📋</div>
+      <h3>History Tracking</h3>
+      <p>Your last 10 predictions are saved in your session.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stat-item">
+    <h2>TF-IDF</h2>
+    <p>Vectorization</p>
+  </div>
+  <div class="stat-item">
+    <h2>PAC Model</h2>
+    <p>ML Classifier</p>
+  </div>
+  <div class="stat-item">
+    <h2>Verified DB</h2>
+    <p>Trusted Facts</p>
+  </div>
+  <div class="stat-item">
+    <h2>Real-time</h2>
+    <p>Instant Prediction</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>© 2025 FakeNewsDetector &nbsp;|&nbsp; Built by <strong>Manikandan J.A.</strong> &nbsp;|&nbsp; Python · Flask · ML</p>
+</footer>
+
+</body>
+</html>

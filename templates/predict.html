@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detector | FakeNewsDetector</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body class="predict-body">
+
+<nav class="navbar">
+  <div class="nav-brand">
+    <span class="logo-icon">🔍</span>
+    <span class="logo-text">FakeNewsDetector</span>
+  </div>
+  <div class="nav-links">
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('predict') }}" class="active">Detector</a>
+    <a href="{{ url_for('history') }}">
+      History{% if history_count > 0 %}<span class="badge">{{ history_count }}</span>{% endif %}
+    </a>
+    <span class="nav-user">👤 {{ username }}</span>
+    <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+  </div>
+</nav>
+
+<div class="predict-wrapper">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="alert alert-{{ cat }}">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <!-- ── INPUT CARD ── -->
+  <div class="predict-card">
+    <h2 class="predict-title">🔍 Check Any News</h2>
+    <p class="predict-sub">
+      Paste any news headline or article. Verified using
+      <strong>Trusted Facts DB</strong> → <strong>Claude AI</strong> → <strong>ML Model</strong>.
+    </p>
+
+    <form method="POST" action="{{ url_for('predict') }}">
+      <div class="form-group">
+        <label>News Headline or Article Text</label>
+        <textarea name="news_text" rows="5"
+          placeholder="Paste or type any news here...&#10;e.g. 'India launched Chandrayaan-3 successfully'"
+          required>{{ news_text }}</textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" id="analyseBtn">
+        🧠 Analyse &amp; Verify
+      </button>
+    </form>
+
+    <!-- Quick examples -->
+    <div class="quick-tests">
+      <p class="qt-label">⚡ Quick Test Examples:</p>
+      <div class="qt-tags">
+        <span class="qt-tag" onclick="fillText('Narendra Modi is the Prime Minister of India')">Modi PM India</span>
+        <span class="qt-tag" onclick="fillText('ISRO successfully launched Chandrayaan 3 to the moon')">ISRO Chandrayaan-3</span>
+        <span class="qt-tag" onclick="fillText('India changes its national flag colour to green')">India flag changed</span>
+        <span class="qt-tag" onclick="fillText('Aliens have landed in Tamil Nadu and taken over Chennai')">Aliens in Chennai</span>
+        <span class="qt-tag" onclick="fillText('Sundar Pichai CEO Google is amazing')">Sundar Pichai CEO</span>
+        <span class="qt-tag" onclick="fillText('Elon Musk has bought Google for 1 trillion dollars')">Elon buys Google</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RESULT CARD ── -->
+  {% if result %}
+  {% set is_real = 'real' in result.lower() %}
+  {% set is_fake = 'fake' in result.lower() %}
+
+  <div class="result-card {{ 'result-real' if is_real else 'result-fake' }}" id="resultCard">
+
+    <!-- Verdict top -->
+    <div class="result-top">
+      <div class="result-icon">{{ '✅' if is_real else '❌' }}</div>
+      <div>
+        <h2 class="result-verdict">
+          {% if is_real %}REAL NEWS
+          {% elif is_fake %}FAKE NEWS
+          {% else %}UNVERIFIED{% endif %}
+        </h2>
+        <div class="result-label">{{ result }}</div>
+      </div>
+    </div>
+
+    <!-- Confidence bar -->
+    <div class="confidence-section">
+      <div class="conf-label">
+        <span>Confidence Score</span>
+        <span class="conf-value {{ 'conf-real' if is_real else 'conf-fake' }}">
+          {{ confidence }}%
+        </span>
+      </div>
+      <div class="conf-bar-bg">
+        <div class="conf-bar-fill {{ 'bar-real' if is_real else 'bar-fake' }}"
+             style="width: {{ [confidence|float, 100]|min }}%"></div>
+      </div>
+    </div>
+
+    <!-- AI Reason -->
+    {% if reason %}
+    <div class="reason-box">
+      <span class="reason-icon">💬</span>
+      <p>{{ reason }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Method + Verified badges -->
+    <div class="badges-row">
+      {% if method_used == "AI Fact Checker" %}
+        <span class="method-badge badge-ai">🤖 AI Fact Checker</span>
+      {% elif method_used == "Trusted Facts DB" %}
+        <span class="method-badge badge-db">📚 Trusted Facts DB</span>
+      {% else %}
+        <span class="method-badge badge-ml">⚙️ ML Model</span>
+      {% endif %}
+
+      {% if verified %}
+        <span class="verified-pill">✅ Source Verified</span>
+      {% endif %}
+    </div>
+    
+   
+    <!-- SOURCE CARD -->
+    {% if source_url %}
+    <div class="source-card">
+      <div class="source-card-header">
+        <span class="source-icon">🌐</span>
+        <div>
+          <p class="source-label">Trusted Source Found</p>
+          <p class="source-domain">{{ source_name or source_url }}</p>
+        </div>
+        <a href="{{ source_url }}" target="_blank" rel="noopener" class="source-visit-btn">
+          Visit Source ↗
+        </a>
+      </div>
+      <div class="source-url-bar">
+        <span>🔗</span>
+        <a href="{{ source_url }}" target="_blank" rel="noopener" class="source-full-url">
+          {{ source_url }}
+        </a>
+      </div>
+    </div>
+    <!-- {% else %}
+    <div class="no-source-card">
+      <span>⚠️</span>
+      <p>No trusted source found. Exercise caution before sharing.</p>
+    </div>
+    {% endif %} -->
+
+    <!-- Analysed text -->
+    <div class="analysed-text">
+      <strong>📝 Analysed Text:</strong>
+      <p>"{{ news_text }}"</p>
+    </div>
+
+    <div style="text-align:center; margin-top:16px;">
+      <a href="{{ url_for('predict') }}" class="btn btn-outline">🔄 Check Another News</a>
+    </div>
+
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- Tips -->
+<div class="tips-section">
+  <h3>💡 How Verification Works</h3>
+  <ul>
+    <li><strong>Step 1 — Trusted Facts DB:</strong> Instant check for known verified facts (100% confidence)</li>
+    <li><strong>Step 2 — AI Fact Checker:</strong> Claude AI analyses and finds trusted source links from real websites</li>
+    <li><strong>Step 3 — ML Model:</strong> TF-IDF + Passive Aggressive Classifier fallback prediction</li>
+    <li>Real news → Trusted source website link automatically shown</li>
+  </ul>
+</div>
+
+<footer class="footer">
+  <p>© 2025 FakeNewsDetector &nbsp;|&nbsp; Built by <strong>Manikandan J.A.</strong> &nbsp;|&nbsp; Python · Flask · ML · AI</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+function fillText(text) {
+  document.querySelector('textarea[name="news_text"]').value = text;
+  document.querySelector('textarea[name="news_text"]').focus();
+}
+{% if result %}
+document.addEventListener('DOMContentLoaded', function() {
+  const r = document.getElementById('resultCard');
+  if (r) setTimeout(() => r.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+});
+{% endif %}
+</script>
+</body>
+</html>

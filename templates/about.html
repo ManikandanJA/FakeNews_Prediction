@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About | FakeNewsDetector</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand">
+    <span class="logo-icon">🔍</span>
+    <span class="logo-text">FakeNewsDetector</span>
+  </div>
+  <div class="nav-links">
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('about') }}" class="active">About</a>
+    {% if logged_in %}
+      <a href="{{ url_for('predict') }}">Detector</a>
+      <a href="{{ url_for('history') }}">History</a>
+      <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('signup') }}" class="btn-nav-signup">Sign Up</a>
+    {% endif %}
+  </div>
+</nav>
+
+<div class="about-hero">
+  <h1>About This Project</h1>
+  <p>A Machine Learning powered Fake News Detection System</p>
+</div>
+
+<div class="about-wrapper">
+
+  <!-- Project Info -->
+  <div class="about-card">
+    <h2>📌 Project Overview</h2>
+    <p>
+      The <strong>Fake News Prediction System</strong> is a web application built using Python (Flask)
+      and Machine Learning techniques to identify whether a given news article or headline is
+      <strong>Real</strong> or <strong>Fake</strong>.
+    </p>
+    <p style="margin-top:12px;">
+      The system uses two approaches: a <strong>Trusted Facts Database</strong> for verified facts,
+      and a <strong>TF-IDF + Passive Aggressive Classifier</strong> ML model for general predictions.
+    </p>
+  </div>
+
+  <!-- Tech Stack -->
+  <div class="about-card">
+    <h2>🛠️ Technology Stack</h2>
+    <div class="tech-grid">
+      <div class="tech-item"><span>🐍</span><strong>Python</strong><p>Core Language</p></div>
+      <div class="tech-item"><span>🌐</span><strong>Flask</strong><p>Web Framework</p></div>
+      <div class="tech-item"><span>🤖</span><strong>Scikit-learn</strong><p>ML Library</p></div>
+      <div class="tech-item"><span>📊</span><strong>TF-IDF</strong><p>Text Vectorizer</p></div>
+      <div class="tech-item"><span>🗃️</span><strong>Pandas</strong><p>Data Processing</p></div>
+      <div class="tech-item"><span>🎨</span><strong>HTML/CSS/JS</strong><p>Frontend</p></div>
+    </div>
+  </div>
+
+  <!-- ML Model -->
+  <div class="about-card">
+    <h2>🧠 How the ML Model Works</h2>
+    <div class="ml-steps">
+      <div class="ml-step">
+        <div class="ml-num">1</div>
+        <div>
+          <strong>Data Preprocessing</strong>
+          <p>News text is cleaned and prepared for analysis.</p>
+        </div>
+      </div>
+      <div class="ml-step">
+        <div class="ml-num">2</div>
+        <div>
+          <strong>TF-IDF Vectorization</strong>
+          <p>Text is converted into numerical feature vectors using Term Frequency-Inverse Document Frequency.</p>
+        </div>
+      </div>
+      <div class="ml-step">
+        <div class="ml-num">3</div>
+        <div>
+          <strong>Passive Aggressive Classifier</strong>
+          <p>An online learning algorithm that is well-suited for large-scale text classification.</p>
+        </div>
+      </div>
+      <div class="ml-step">
+        <div class="ml-num">4</div>
+        <div>
+          <strong>Confidence Score</strong>
+          <p>Decision function output is converted to a probability score using sigmoid function.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Developer -->
+  <div class="about-card dev-card">
+    <h2>👨‍💻 Developer</h2>
+    <div class="dev-info">
+      <div class="dev-avatar">MJ</div>
+      <div>
+        <h3>Manikandan J.A.</h3>
+        <p>Full Stack Developer | MCA Student</p>
+        <p>K.L.N College of Engineering, Madurai</p>
+        <div class="dev-links">
+          <a href="https://jamani.netlify.app/" target="_blank">🌐 Portfolio</a>
+          <a href="https://github.com/ManikandanJA" target="_blank">💻 GitHub</a>
+          <a href="mailto:manikandanja123@gmail.com">📧 Email</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <p>© 2025 FakeNewsDetector &nbsp;|&nbsp; Built by <strong>Manikandan J.A.</strong> &nbsp;|&nbsp; Python · Flask · ML</p>
+</footer>
+
+</body>
+</html>

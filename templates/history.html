@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>History | FakeNewsDetector</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+
+<body class="predict-body">
+
+<nav class="navbar">
+  <div class="nav-brand">
+    <span class="logo-icon">🔍</span>
+    <span class="logo-text">FakeNewsDetector</span>
+  </div>
+
+  <div class="nav-links">
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('predict') }}">Detector</a>
+    <a href="{{ url_for('history') }}" class="active">History</a>
+    <span class="nav-user">👤 {{ username }}</span>
+    <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+  </div>
+</nav>
+
+<div class="history-wrapper">
+
+  <div class="history-header">
+    <h2>📋 Prediction History</h2>
+    <p>Your last predictions</p>
+
+    {% if history %}
+      <a href="{{ url_for('clear_history') }}" class="btn-clear"
+         onclick="return confirm('Clear all history?')">
+        🗑️ Clear History
+      </a>
+    {% endif %}
+  </div>
+
+  {% if history %}
+
+    <div class="history-list">
+
+      {% for item in history %}
+      <div class="history-item
+        {% if item['result'] == 'Real' %}h-real
+        {% elif item['result'] == 'Fake' %}h-fake
+        {% else %}h-partial
+        {% endif %}">
+
+        <div class="h-icon">
+          {% if item['result'] == 'Real' %}✅
+          {% elif item['result'] == 'Fake' %}❌
+          {% else %}⚠️
+          {% endif %}
+        </div>
+
+        <div class="h-content">
+
+          <p class="h-text">{{ item['news'] }}</p>
+
+          <div class="h-meta">
+
+            <span class="h-verdict">{{ item['result'] }}</span>
+            <span class="h-conf">{{ item['confidence'] }}%</span>
+            <span class="h-method">{{ item['method'] }}</span>
+
+            {% if item['result'] == 'Real' and item['source_url'] %}
+              <a href="{{ item['source_url'] }}" target="_blank" class="h-link">
+                🔗 Source
+              </a>
+            {% endif %}
+
+          </div>
+
+        </div>
+
+      </div>
+      {% endfor %}
+
+    </div>
+
+  {% else %}
+
+    <div class="empty-history">
+      <div class="empty-icon">📭</div>
+      <h3>No predictions yet!</h3>
+      <p>Go to detector and check news</p>
+      <a href="{{ url_for('predict') }}" class="btn btn-primary">Start Detecting</a>
+    </div>
+
+  {% endif %}
+
+</div>
+
+</body>
+</html>

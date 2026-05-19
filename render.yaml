@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: fakenews-detector
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false          # Set manually in Render dashboard
+      - key: SECRET_KEY
+        generateValue: true  # Auto generate
+
+databases:
+  - name: fakenews-db
+    plan: free
+    databaseName: fakenews_db
